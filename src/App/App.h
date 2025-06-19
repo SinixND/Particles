@@ -23,6 +23,7 @@ public:
 private:
     void setupAppEvents();
     void setupShaders( AppConfig const& config );
+    void setupShadersTest( AppConfig const& config );
 
 public:
     void init( AppConfig const& config );

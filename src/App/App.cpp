@@ -1,5 +1,7 @@
 #include "App.h"
 
+#define TEST
+
 #include "AppConfigs.h"
 #include "AppData.h"
 #include "ColorData.h"
@@ -108,6 +110,41 @@ void App::setupShaders( AppConfig const& config )
     rlDisableVertexArray();
 }
 
+void App::setupShadersTest( AppConfig const& config )
+{
+    shader = LoadShader(
+        config.vertexShaderPath,
+        config.fragmentShaderPath
+    );
+    vao = rlLoadVertexArray();
+    rlEnableVertexArray( vao );
+    vbo = rlLoadVertexBuffer(
+        simulation.vertices,
+        sizeof( simulation.vertices ),
+        false
+    );
+    //* Position
+    rlSetVertexAttribute(
+        0,
+        2,
+        RL_FLOAT,
+        false,
+        5 * sizeof( float ),
+        0
+    );
+    //* Color
+    rlSetVertexAttribute(
+        1,
+        3,
+        RL_FLOAT,
+        false,
+        5 * sizeof( float ),
+        0
+    );
+    rlEnableVertexAttribute( 0 );
+    rlEnableVertexAttribute( 1 );
+}
+
 void App::init( AppConfig const& config )
 {
     setupFrameworks( config );
@@ -116,7 +153,11 @@ void App::init( AppConfig const& config )
 
     simulation.init();
 
+#if !defined( TEST )
     setupShaders( config );
+#else
+    setupShadersTest( config );
+#endif
 }
 
 void updateFullscreenState()
@@ -204,6 +245,7 @@ void App::run()
 void App::render()
 {
 #if !defined( NOGUI )
+#if !defined( TEST )
     BeginDrawing();
     ClearBackground( ColorData::BG );
 
@@ -253,6 +295,18 @@ void App::render()
     }
 
     EndDrawing();
+#else
+    BeginDrawing(); // Seems to only update time?
+    ClearBackground( BLACK );
+    rlEnableShader( shader.id );
+    rlEnableVertexArray( vao );
+    rlDrawVertexArray(
+        0,
+        3
+    );
+    rlDisableVertexArray();
+    EndDrawing();
+#endif
 #endif
 }
 

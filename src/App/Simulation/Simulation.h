@@ -24,6 +24,15 @@ class Simulation
 public:
     Particle particles[PARTICLE_COUNT];
 
+    // clang-format off
+    float vertices[15] = {
+        // x, y, r, g, b
+        -.5f, -.5f,  1.0f, 0.0f, 0.0f, 
+        0.5f, -.5f,  0.0f, 1.0f, 0.0f, 
+        0.0f, 0.5f,  0.0f, 0.0f, 1.0f
+    };
+    // clang-format on
+
     //* Shader stuff
     Shader shader{};
     unsigned int vao, vbo;
